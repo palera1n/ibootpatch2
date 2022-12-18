@@ -15,6 +15,7 @@
 
 #include <stdlib.h>
 #include <stdint.h>
+#include <string.h>
 // printf
 #include <stdio.h>
 #include "offsetfinder.h"
