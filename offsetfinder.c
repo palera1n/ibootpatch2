@@ -11,8 +11,11 @@
 //  Copyright (c) 2021 sakuRdev. All rights reserved.
 //
 
+#define _GNU_SOURCE
+
 #include <stdlib.h>
 #include <stdint.h>
+#include <string.h>
 // printf
 #include <stdio.h>
 #include "offsetfinder.h"
