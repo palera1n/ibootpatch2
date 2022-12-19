@@ -42,7 +42,7 @@ jobs:
 
       - name: Build
         run: |
-          make -j$(nproc)
+          make -j$(sysctl -n hw.ncpu)
           echo -n "$(git rev-parse HEAD | tr -d '\n')" > latest_build_sha.txt
           echo -n "$(git rev-list --count HEAD | tr -d '\n')" > latest_build_num.txt
 
