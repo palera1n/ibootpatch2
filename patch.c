@@ -79,16 +79,16 @@ int open_file(char *file, size_t *sz, unsigned char **buf)
 
 #define SUB (0x000100000)
 
-void useage(const char *path)
+void usage(const char *path)
 {
     printf("%s [--t8015/--t8010] <in> <out>\n", path);
+    printf("Version: " VERSION "\n");
 }
 
 int main(int argc, char **argv)
 {
-    
     if(argc != 4) {
-        useage(argv[0]);
+        usage(argv[0]);
         return 0;
     }
     
@@ -111,7 +111,7 @@ int main(int argc, char **argv)
     }
     
     if(!cpid) {
-        useage(argv[0]);
+        usage(argv[0]);
         return -1;
     }
     

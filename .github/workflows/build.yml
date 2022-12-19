@@ -1,0 +1,61 @@
+name: Build iBootpatch2
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Build
+        run: |
+          make -j$(nproc)
+          echo -n "$(git rev-parse HEAD | tr -d '\n')" > latest_build_sha.txt
+          echo -n "$(git rev-list --count HEAD | tr -d '\n')" > latest_build_num.txt
+
+      - name: Upload versioning
+        uses: actions/upload-artifact@v2
+        with:
+          name: Versioning
+          path: |
+            ${{ github.workspace }}/latest_build_sha.txt
+            ${{ github.workspace }}/latest_build_num.txt
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3.1.0
+        with:
+          name: iBootpatch2-Linux
+          path: iBootpatch2
+
+  build-macOS:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Build
+        run: |
+          make -j$(nproc)
+          echo -n "$(git rev-parse HEAD | tr -d '\n')" > latest_build_sha.txt
+          echo -n "$(git rev-list --count HEAD | tr -d '\n')" > latest_build_num.txt
+
+      - name: Upload versioning
+        uses: actions/upload-artifact@v2
+        with:
+          name: Versioning
+          path: |
+            ${{ github.workspace }}/latest_build_sha.txt
+            ${{ github.workspace }}/latest_build_num.txt
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3.1.0
+        with:
+          name: iBootpatch2-Darwin
+          path: iBootpatch2
