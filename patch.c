@@ -234,27 +234,27 @@ int main(int argc, char **argv)
             
             patch_bootx_cmd_handler[0] = iboot_base + zeroBuf;
             LOG("change dorwx_cmd_handler -> %016llx", iboot_base + zeroBuf);
-            patch_go_cmd_handler[0] = iboot_base + zeroBuf + a10_a11rxw_len;
-            LOG("change go_cmd_handler -> %016llx", iboot_base + zeroBuf + a10_a11rxw_len);
+            patch_go_cmd_handler[0] = iboot_base + zeroBuf + a10_a11rxw_bin_len;
+            LOG("change go_cmd_handler -> %016llx", iboot_base + zeroBuf + a10_a11rxw_bin_len);
             
             LOG("writing sdram_page1");
-            uint64_t* ptr = (uint64_t*)(a10_a11rxw + (a10_a11rxw_len-8));
+            uint64_t* ptr = (uint64_t*)(a10_a11rxw_bin + (a10_a11rxw_bin_len-8));
             ptr[0] = sdram_page1;
             LOG("writing load_address");
-            ptr = (uint64_t*)(go_cmd_hook + (go_cmd_hook_len-0x10));
+            ptr = (uint64_t*)(go_cmd_hook_bin + (go_cmd_hook_bin_len-0x10));
             ptr[0] = load_address-SUB;
             ptr[1] = load_address;
             
-            ptr = (uint64_t*)(tram + (tram_len-8));
+            ptr = (uint64_t*)(tram_bin + (tram_bin_len-8));
             ptr[0] = load_address-SUB+4;
             
             LOG("copying payload...");
-            memcpy((void*)(idata + zeroBuf), a10_a11rxw, a10_a11rxw_len);
-            memcpy((void*)(idata + zeroBuf + a10_a11rxw_len), go_cmd_hook, go_cmd_hook_len);
-            memcpy((void*)(idata + zeroBuf + a10_a11rxw_len + go_cmd_hook_len), tram, tram_len);
+            memcpy((void*)(idata + zeroBuf), a10_a11rxw_bin, a10_a11rxw_bin_len);
+            memcpy((void*)(idata + zeroBuf + a10_a11rxw_bin_len), go_cmd_hook_bin, go_cmd_hook_bin_len);
+            memcpy((void*)(idata + zeroBuf + a10_a11rxw_bin_len + go_cmd_hook_bin_len), tram_bin, tram_bin_len);
             LOG("done");
             
-            uint64_t jumpto_hook_addr = zeroBuf + a10_a11rxw_len + go_cmd_hook_len;
+            uint64_t jumpto_hook_addr = zeroBuf + a10_a11rxw_bin_len + go_cmd_hook_bin_len;
             uint32_t opcode = make_branch(jumpto_bl, jumpto_hook_addr);
             LOG("jumpto_bl_opcode: %08x", opcode);
             uint32_t* patch_jumpto_bl = (uint32_t*)(idata + jumpto_bl);

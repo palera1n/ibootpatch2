@@ -13,9 +13,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Install dependencies
+        run: sudo apt install clang
+
       - name: Build
         run: |
-          make -j$(nproc)
+          make -j$(nproc) AS_FOR_TARGET=clang ASFLAGS_FOR_TARGET='-c -target aarch64-apple-darwin -arch arm64 -static -nostdlib -ffreestanding'
           echo -n "$(git rev-parse HEAD | tr -d '\n')" > latest_build_sha.txt
           echo -n "$(git rev-list --count HEAD | tr -d '\n')" > latest_build_num.txt
 
