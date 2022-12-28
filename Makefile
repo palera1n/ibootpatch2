@@ -31,7 +31,7 @@ clean:
 	$(TARGET_AS) $(TARGET_ASFLAGS) $*.S -o $*.o
 
 %.bin: %.o vmacho
-	vmacho -f $*.o $*.bin
+	./vmacho -f $*.o $*.bin
 
 payload.h: a10_a11rxw.bin go_cmd_hook.bin tram.bin
 	xxd -iC a10_a11rxw.bin > payload.h
