@@ -23,6 +23,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
+#include <inttypes.h>
 
 #include "offsetfinder.h"
 #include "payload.h"
@@ -126,32 +127,32 @@ int main(int argc, char **argv)
         uint64_t iboot_base = *(uint64_t*)(idata + 0x300);
         if(!iboot_base)
             goto end;
-        LOG("%016llx[%016llx]: iboot_base", iboot_base, (uint64_t)0x300);
+        LOG("%016" PRIx64 "[%016" PRIx64 "]: iboot_base", iboot_base, (uint64_t)0x300);
         
 #ifdef DEVBUILD
         {
             /*---- test part ----*/
             uint64_t test_printf = find_printf(iboot_base, idata, isize);
             if(test_printf)
-                DEVLOG("%016llx[%016llx]: test_printf", test_printf + iboot_base, test_printf);
+                DEVLOG("%016" PRIx64 "[%016" PRIx64 "]: test_printf", test_printf + iboot_base, test_printf);
             else
                 DEVLOG("Failed to find _printf");
             
             uint64_t test_mount_and_boot_system = find_mount_and_boot_system(iboot_base, idata, isize);
             if(test_mount_and_boot_system)
-                DEVLOG("%016llx[%016llx]: test_mount_and_boot_system", test_mount_and_boot_system + iboot_base, test_mount_and_boot_system);
+                DEVLOG("%016" PRIx64 "[%016" PRIx64 "]: test_mount_and_boot_system", test_mount_and_boot_system + iboot_base, test_mount_and_boot_system);
             else
                 DEVLOG("Failed to find _mount_and_boot_system");
             
             uint64_t test_jumpto_func = find_jumpto_func(iboot_base, idata, isize);
             if(test_jumpto_func)
-                DEVLOG("%016llx[%016llx]: test_jumpto_func", test_jumpto_func + iboot_base, test_jumpto_func);
+                DEVLOG("%016" PRIx64 "[%016" PRIx64 "]: test_jumpto_func", test_jumpto_func + iboot_base, test_jumpto_func);
             else
                 DEVLOG("Failed to find jumpto_func");
             
             uint64_t test_panic = find_panic(iboot_base, idata, isize);
             if(test_panic)
-                DEVLOG("%016llx[%016llx]: test_panic", test_panic + iboot_base, test_panic);
+                DEVLOG("%016" PRIx64 "[%016" PRIx64 "]: test_panic", test_panic + iboot_base, test_panic);
             else
                 DEVLOG("Failed to find _panic");
             
@@ -163,49 +164,49 @@ int main(int argc, char **argv)
             ERR("Failed to find check_bootmode");
             goto end;
         }
-        LOG("%016llx[%016llx]: check_bootmode", check_bootmode + iboot_base, check_bootmode);
+        LOG("%016" PRIx64 "[%016" PRIx64 "]: check_bootmode", check_bootmode + iboot_base, check_bootmode);
         
         uint64_t bootx_str = find_bootx_str(iboot_base, idata, isize);
         if(!bootx_str) {
             ERR("Failed to find bootx string");
             goto end;
         }
-        LOG("%016llx[%016llx]: bootx_str", bootx_str + iboot_base, bootx_str);
+        LOG("%016" PRIx64 "[%016" PRIx64 "]: bootx_str", bootx_str + iboot_base, bootx_str);
         
         uint64_t bootx_cmd_handler = find_bootx_cmd_handler(iboot_base, idata, isize);
         if(!bootx_cmd_handler) {
             ERR("Failed to find bootx command handler");
             goto end;
         }
-        LOG("%016llx[%016llx]: bootx_cmd_handler", bootx_cmd_handler + iboot_base, bootx_cmd_handler);
+        LOG("%016" PRIx64 "[%016" PRIx64 "]: bootx_cmd_handler", bootx_cmd_handler + iboot_base, bootx_cmd_handler);
         
         uint64_t go_cmd_handler = find_go_cmd_handler(iboot_base, idata, isize);
         if(!go_cmd_handler) {
             ERR("Failed to find go command handler");
             goto end;
         }
-        LOG("%016llx[%016llx]: go_cmd_handler", go_cmd_handler + iboot_base, go_cmd_handler);
+        LOG("%016" PRIx64 "[%016" PRIx64 "]: go_cmd_handler", go_cmd_handler + iboot_base, go_cmd_handler);
         
         uint64_t zeroBuf = find_zero(iboot_base, idata, isize);
         if(!zeroBuf) {
             ERR("Failed to find zeroBuf");
             goto end;
         }
-        LOG("%016llx[%016llx]: zeroBuf", zeroBuf + iboot_base, zeroBuf);
+        LOG("%016" PRIx64 "[%016" PRIx64 "]: zeroBuf", zeroBuf + iboot_base, zeroBuf);
         
         uint64_t jumpto_bl = find_jumpto_bl(iboot_base, idata, isize);
         if(!jumpto_bl) {
             ERR("Failed to find jumpto_bl");
             goto end;
         }
-        LOG("%016llx[%016llx]: jumpto_bl", jumpto_bl + iboot_base, jumpto_bl);
+        LOG("%016" PRIx64 "[%016" PRIx64 "]: jumpto_bl", jumpto_bl + iboot_base, jumpto_bl);
         
         uint64_t kc_str = find_kc(iboot_base, idata, isize);
         if(!kc_str) {
             ERR("Failed to find kernelcache string");
             goto end;
         }
-        LOG("%016llx[%016llx]: kc_str", kc_str + iboot_base, kc_str);
+        LOG("%016" PRIx64 "[%016" PRIx64 "]: kc_str", kc_str + iboot_base, kc_str);
         
         /*---- patch part ----*/
         {
@@ -233,9 +234,9 @@ int main(int argc, char **argv)
             uint64_t* patch_go_cmd_handler = (uint64_t*)(idata + go_cmd_handler);
             
             patch_bootx_cmd_handler[0] = iboot_base + zeroBuf;
-            LOG("change dorwx_cmd_handler -> %016llx", iboot_base + zeroBuf);
+            LOG("change dorwx_cmd_handler -> %016" PRIx64, iboot_base + zeroBuf);
             patch_go_cmd_handler[0] = iboot_base + zeroBuf + a10_a11rxw_bin_len;
-            LOG("change go_cmd_handler -> %016llx", iboot_base + zeroBuf + a10_a11rxw_bin_len);
+            LOG("change go_cmd_handler -> %016" PRIx64, iboot_base + zeroBuf + a10_a11rxw_bin_len);
             
             LOG("writing sdram_page1");
             uint64_t* ptr = (uint64_t*)(a10_a11rxw_bin + (a10_a11rxw_bin_len-8));
