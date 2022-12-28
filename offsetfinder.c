@@ -35,6 +35,7 @@
 // printf
 #include <stdio.h>
 #include "offsetfinder.h"
+#include "payload.h"
 
 static uint32_t* find_insn_maskmatch_match(uint8_t* data, size_t size, uint32_t* matches, uint32_t* masks, int count)
 {
@@ -668,9 +669,9 @@ uint64_t find_bootargs_adr(uint64_t region, uint8_t* data, size_t size)
 
 uint64_t find_zero(uint64_t region, uint8_t* data, size_t size)
 {
-    unsigned char zeroBuf[0x150];
-    memset(&zeroBuf, '\0', 0x150);
-    uint32_t* zero = memmem(data, size, zeroBuf, 0x150);
+    unsigned char zeroBuf[a10_a11rxw_bin_len + go_cmd_hook_bin_len];
+    memset(&zeroBuf, '\0', a10_a11rxw_bin_len + go_cmd_hook_bin_len);
+    uint32_t* zero = memmem(data, size, zeroBuf, a10_a11rxw_bin_len + go_cmd_hook_bin_len);
     if(!zero)
         return 0;
     

@@ -3,4 +3,4 @@ iBootpatch2
 *.bin
 *.o
 vmacho
-payload.h
+payload.c
