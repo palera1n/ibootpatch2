@@ -671,7 +671,7 @@ uint64_t find_zero(uint64_t region, uint8_t* data, size_t size)
 {
     unsigned char zeroBuf[a10_a11rxw_bin_len + go_cmd_hook_bin_len];
     memset(&zeroBuf, '\0', a10_a11rxw_bin_len + go_cmd_hook_bin_len);
-    uint32_t* zero = memmem(data, size, zeroBuf, a10_a11rxw_bin_len + go_cmd_hook_bin_len);
+    uint32_t* zero = memmem(data, size, zeroBuf, a10_a11rxw_bin_len + go_cmd_hook_bin_len); 
     if(!zero)
         return 0;
     
