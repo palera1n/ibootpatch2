@@ -1,3 +1,6 @@
-
 iBootpatch2
 .DS_Store
+*.bin
+*.o
+vmacho
+payload.h
